@@ -2,6 +2,7 @@
 Android 可"折叠""打开"或者"全文""收起"的TextView
 
 **效果图如下：**
+
  ![image](https://github.com/imflyn/ExpandableTextView/raw/master/screenshots/1.gif)
  ![image](https://github.com/imflyn/ExpandableTextView/raw/master/screenshots/2.gif)
  

@@ -10,10 +10,10 @@ Android 可"折叠""打开"或者"全文""收起"的TextView
 
 布局文件
 ```
-    <packname.ExpandableTextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+<yourpackname.ExpandableTextView
+    android:id="@+id/textView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" />
 ```
 文本框中
 ```

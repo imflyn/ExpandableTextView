@@ -30,7 +30,7 @@ public class ExpandableTextView extends LinearLayout implements View.OnClickList
     private TextView tv_expandable_content;
     private TextView tv_expand_or_collapse;
 
-    private boolean forceRefresh;
+    private boolean forceRefresh;//是否每次setText都重新获取文本行数
     private float textViewWidthPx;
     private int position;
     private ExpandStatusChangedListener expandStatusChangedListener;

@@ -24,15 +24,14 @@ public class ExpandableTextView extends LinearLayout implements View.OnClickList
     private final int STATE_COLLAPSED = 2; //文本行数超过限定行数,处于折叠状态
     private final int STATE_EXPANDED = 3; //文本行数超过限定行数,被点击全文展开
 
-
+    /* 默认最高行数 */
+    private static final int MAX_COLLAPSED_LINES = 3;
+    private Map<Integer, Integer> mCollapsedStatus = new HashMap<>();
     private TextView tv_expandable_content;
     private TextView tv_expand_or_collapse;
 
+    private boolean forceRefresh;
     private float textViewWidthPx;
-    private int maxLines = 3;
-
-
-    private Map<Integer, Integer> mCollapsedStatus = new HashMap<>();
     private int position;
     private ExpandStatusChangedListener expandStatusChangedListener;
 
@@ -65,6 +64,10 @@ public class ExpandableTextView extends LinearLayout implements View.OnClickList
 
     public void setTextViewWidthPx(float textViewWidthPx) {
         this.textViewWidthPx = textViewWidthPx;
+    }
+
+    public void setForceRefresh(boolean forceRefresh) {
+        this.forceRefresh = forceRefresh;
     }
 
     public void setExpandStatusChangedListener(ExpandStatusChangedListener expandStatusChangedListener) {
@@ -109,15 +112,18 @@ public class ExpandableTextView extends LinearLayout implements View.OnClickList
     }
 
     public void setText(String text, final int index) {
+        if (forceRefresh) {
+            mCollapsedStatus.put(index, null);
+        }
+
         this.position = index;
         Integer state = mCollapsedStatus.get(index);
 
         if (state == null) {
-
             int lineCount = getLineCount(text);
-            //L.i("================================lineCount:" + lineCount + "======================================");
-            if (lineCount > maxLines) {
-                tv_expandable_content.setMaxLines(maxLines);
+//            L.i("================================lineCount:" + lineCount + "======================================");
+            if (lineCount > MAX_COLLAPSED_LINES) {
+                tv_expandable_content.setMaxLines(MAX_COLLAPSED_LINES);
                 tv_expand_or_collapse.setVisibility(View.VISIBLE);
                 tv_expand_or_collapse.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_arrow_down, 0, 0);
                 mCollapsedStatus.put(index, STATE_COLLAPSED);
@@ -133,11 +139,11 @@ public class ExpandableTextView extends LinearLayout implements View.OnClickList
             //如果之前已经初始化过了，则使用保存的状态，无需再获取一次
             switch (state) {
                 case STATE_NOT_OVERFLOW:
-                    tv_expandable_content.setMaxLines(maxLines);
+                    tv_expandable_content.setMaxLines(MAX_COLLAPSED_LINES);
                     tv_expand_or_collapse.setVisibility(View.GONE);
                     break;
                 case STATE_COLLAPSED:
-                    tv_expandable_content.setMaxLines(maxLines);
+                    tv_expandable_content.setMaxLines(MAX_COLLAPSED_LINES);
                     tv_expand_or_collapse.setVisibility(View.VISIBLE);
                     tv_expand_or_collapse.setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.ic_arrow_down, 0, 0);
                     break;
@@ -168,7 +174,7 @@ public class ExpandableTextView extends LinearLayout implements View.OnClickList
             }
         } else if (state == STATE_EXPANDED) {
             tv_expand_or_collapse.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_arrow_down, 0, 0);
-            tv_expandable_content.setMaxLines(maxLines);
+            tv_expandable_content.setMaxLines(MAX_COLLAPSED_LINES);
             mCollapsedStatus.put(position, STATE_COLLAPSED);
 
             if (null != expandStatusChangedListener) {

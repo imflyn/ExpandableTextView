@@ -201,6 +201,9 @@ public class ExpandableTextView extends LinearLayout implements View.OnClickList
 
         String[] sources = source.split("\n");
         for (String chunk : sources) {
+            if ("".equals(chunk)) {
+                chunk = "\n";
+            }
             if (paint.measureText(chunk) < maxWidthPx) {
                 processFitChunk(maxWidthPx, paint, result, currentLine, chunk);
             } else {
@@ -252,7 +255,7 @@ public class ExpandableTextView extends LinearLayout implements View.OnClickList
     private static void processFitChunk(float maxWidth, Paint paint, ArrayList<String> result, ArrayList<String> currentLine, String chunk) {
         currentLine.add(chunk);
         String currentLineStr = TextUtils.join(" ", currentLine);
-        if (paint.measureText(currentLineStr) >= maxWidth) {
+        if (paint.measureText(currentLineStr) >= maxWidth || "\n".equals(chunk)) {
             //remove chunk
             currentLine.remove(currentLine.size() - 1);
             result.add(TextUtils.join(" ", currentLine));
